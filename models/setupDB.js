@@ -54,9 +54,9 @@ const createTables = async () => {
       );
     `);
 
-    console.log("✅ Alla tabeller skapades (om de inte redan fanns).");
+    console.log(" Alla tabeller skapades (om de inte redan fanns).");
   } catch (error) {
-    console.error("❌ Fel vid skapande av tabeller:", error);
+    console.error(" Fel vid skapande av tabeller:", error);
   }
 };
 

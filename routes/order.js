@@ -1,9 +1,13 @@
 import express from "express";
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.status(200).send("hejsan order");
+router.get("/:id", (req, res) => {
+  res
+    .status(200)
+    .send("hämta din order på ditt orderId som du fick när du beställde");
 });
+
+router.post("/", (req, res) => {});
 
 export default router;
 

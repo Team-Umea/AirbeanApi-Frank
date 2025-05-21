@@ -42,6 +42,7 @@ const createTables = async () => {
 
       CREATE TABLE IF NOT EXISTS cart (
         id SERIAL PRIMARY KEY,
+        cart_sum DECIMAL(10,2) DEFAULT 0.00,
         customer_id INT REFERENCES account(id),
         created_at TIMESTAMP DEFAULT now()
       );

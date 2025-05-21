@@ -1,6 +1,6 @@
 import app from "./app.js";
 import http from "http";
-import createTables from "./models/setupDB.js";
+import createTables from "./config/setupDB.js";
 
 const port = process.env.PORT || 8000;
 

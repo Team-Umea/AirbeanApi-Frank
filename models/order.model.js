@@ -48,7 +48,7 @@ export const dbOrderHistory = async (userId) => {
   const result = await pool.query(
     `SELECT id AS order_id, order_sum, created_at
      FROM "order"
-     WHERE customer_id = $1
+     WHERE account_id = $1
      ORDER BY created_at DESC`,
     [userId]
   );

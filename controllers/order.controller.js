@@ -18,10 +18,10 @@ export const createOrder = async (req, res) => {
     }
 
     const customerResult = await pool.query(
-      `SELECT customer_id FROM cart WHERE id = $1`,
+      `SELECT account_id FROM cart WHERE id = $1`,
       [cartId]
     );
-    const accountId = customerResult.rows[0]?.customer_id;
+    const accountId = customerResult.rows[0]?.account_id;
 
     if (!accountId) {
       return res.status(400).json({ error: "Cart is not linked to a user" });

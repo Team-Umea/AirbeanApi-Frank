@@ -14,7 +14,8 @@ const createTables = async () => {
         city VARCHAR(50),
         email VARCHAR(100) UNIQUE,
         password_hash VARCHAR(100),
-        role TEXT DEFAULT 'user'
+        role TEXT DEFAULT 'user',
+        user_id UUID UNIQUE NOT NULL
       );
 
       CREATE TABLE IF NOT EXISTS product (

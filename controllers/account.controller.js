@@ -1,6 +1,6 @@
 import { dbReqisterAcc, dbCheckEmail } from "../models/account.model.js";
 import bcrypt from "bcrypt"
-const createAccount = async (req,res) =>{
+export const createAccount = async (req,res) =>{
     const {
             profile_picture,
             firstname,
@@ -34,7 +34,7 @@ const createAccount = async (req,res) =>{
             res.status(500).json({ error: 'Database error' });
     }
 }
-const login = async (req,res) =>{
+export const loginAccount = async (req,res) =>{
     const { email, password } = req.body;
 
     try{
@@ -62,4 +62,3 @@ const login = async (req,res) =>{
         res.status(500).json({ error: 'Inloggning misslyckades' });
     }
 }
-export default createAccount

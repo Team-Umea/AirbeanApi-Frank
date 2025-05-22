@@ -28,39 +28,27 @@ export const confirmOrder = async (req, res) => {
   const { orderId } = req.body;
 
   try {
-    const orderResult = await pool.query(`SELECT * FROM "order" WHERE id = $1`, [orderId]);
-    const order = orderResult.rows[0];
-
-    if (!order) {
-      return res.status(404).json({ error: "Order not found" });
-    }
-
-   if (order.status === 'pending') {
-      await pool.query(`UPDATE "order" SET status = 'delivering' WHERE id = $1`, [orderId]);
-
-      const randomMinutes = 10 + Math.floor(Math.random() * 16);
-
-      // Schedule delivery
-      setTimeout(async () => {
-        await pool.query(`UPDATE "order" SET status = 'delivered' WHERE id = $1`, [orderId]);
-        console.log(`Order ${orderId} has been delivered!`);
-      }, randomMinutes * 60000); // ⏱️ Convert to milliseconds
-
-      return res.status(200).json({ message: `Order ${orderId} is now delivering` });
-
-    } else if (order.status === 'delivering') {
-      return res.status(200).json({ message: `Order ${orderId} is already delivering` });
-
-    } else if (order.status === 'delivered') {
-      return res.status(200).json({ message: `Order ${orderId} has already been delivered` });
-    }
-
-    return res.status(400).json({ message: `Order ${orderId} is in unknown status` });
-
+    const result = await advanceOrderStatus(orderId);
+    res.status(result.status).json({ message: result.message });
   } catch (error) {
     console.error("Error in confirmOrder:", error);
     res.status(500).json({ error: "Internal server error" });
   }
+};
+
+export const simulateOrderLifecycle = async (orderId) => {
+  // Step 1: Go from pending → delivering after 5 seconds
+  setTimeout(async () => {
+    const result = await advanceOrderStatus(orderId);
+    console.log(`[Simulate] ${result.message}`);
+  }, 5000);
+
+  // Step 2: Go from delivering → delivered after 10–25 minutes
+  const randomMinutes = 10 + Math.floor(Math.random() * 16);
+  setTimeout(async () => {
+    const result = await advanceOrderStatus(orderId);
+    console.log(`[Simulate] ${result.message}`);
+  }, randomMinutes * 60000);
 };
 
 export const getOrder = async (req, res) => {

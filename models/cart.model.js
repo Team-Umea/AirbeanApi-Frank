@@ -1,12 +1,12 @@
 import pool from "../config/db.js";
 
 // Skapa en ny kundvagn
-export const dbCreateCart = async (customer_id) => {
+export const dbCreateCart = async (account_id) => {
   const result = await pool.query(
-    `INSERT INTO cart (customer_id, cart_sum)
+    `INSERT INTO cart (account_id, cart_sum)
      VALUES ($1, 0.00)
      RETURNING id`,
-    [customer_id]
+    [account_id]
   );
   return result.rows[0].id;
 };

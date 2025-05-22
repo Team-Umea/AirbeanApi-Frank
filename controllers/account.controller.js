@@ -1,5 +1,6 @@
 import { dbReqisterAcc, dbCheckEmail } from "../models/account.model.js";
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken";
 export const createAccount = async (req,res) =>{
     const {
             profile_picture,
@@ -25,7 +26,7 @@ export const createAccount = async (req,res) =>{
             address,
             post_number,
             city,
-            email,
+            email.toLowerCase(),
             hashedPassword);
             res.status(201).json("account created", account.firstname, account.surname);
 
@@ -38,7 +39,7 @@ export const loginAccount = async (req,res) =>{
     const { email, password } = req.body;
 
     try{
-        const result = await dbCheckEmail(email);
+        const result = await dbCheckEmail(email.toLowerCase());
 
         if(result.rows.length === 0){
             return res.status(404).json({error:"Account not found."});
@@ -54,10 +55,10 @@ export const loginAccount = async (req,res) =>{
             { account_id: account.account_id , email: account.email },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
-    );
+        );
 
-    res.status(200).json({message: "Login succesful", token})
-    }catch(err){
+        res.status(200).json({message: "Login succesful", token})
+    } catch(err){
         console.error('Fel vid inloggning:', err);
         res.status(500).json({ error: 'Inloggning misslyckades' });
     }

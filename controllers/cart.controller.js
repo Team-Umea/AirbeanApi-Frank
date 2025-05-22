@@ -6,9 +6,9 @@ import {
 } from "../models/cart.model.js";
 //logik för routes
 export const createCart = async (req, res) => {
-  const { customer_id } = req.body;
+  const { account_id } = req.body;
   try {
-    const cartId = await dbCreateCart(customer_id);
+    const cartId = await dbCreateCart(account_id);
     res.status(201).json({ cartId });
   } catch (error) {
     console.error("Error in createCart:", error);

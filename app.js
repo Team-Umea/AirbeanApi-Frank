@@ -4,6 +4,8 @@ import orderPage from "./routes/order.js";
 import cartPage from "./routes/cart.js";
 import productPage from "./routes/product.js";
 import accountRoute from "./routes/account.js"
+import dotenv from 'dotenv';
+dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(attachPool);

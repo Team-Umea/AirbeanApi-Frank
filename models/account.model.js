@@ -17,5 +17,5 @@ export const dbReqisterAcc = async (
             }
 export const dbCheckEmail = async(email) =>{
     const result = await pool.query("SELECT * FROM account WHERE email = $1", [email]);
-    return result.rows[0];
+    return result;
 }

@@ -15,7 +15,7 @@ const createTables = async () => {
         city VARCHAR(50),
         email VARCHAR(100) UNIQUE,
         password_hash VARCHAR(100),
-        acount_id UUID UNIQUE DEFAULT uuid_generate_v4(),
+        account_id UUID UNIQUE DEFAULT uuid_generate_v4(),
         role TEXT DEFAULT 'user'
       );
 
@@ -29,15 +29,16 @@ const createTables = async () => {
 
       CREATE TABLE IF NOT EXISTS "order" (
         id SERIAL PRIMARY KEY,
-        account_id INT REFERENCES account(id),
+        account_id INT REFERENCES account(id) ON DELETE CASCADE,
         order_sum DECIMAL(10,2),
-        created_at TIMESTAMP DEFAULT now()
+        created_at TIMESTAMP DEFAULT now(),
+        status VARCHAR (50) DEFAULT 'pending' NOT NULL
       );
 
       CREATE TABLE IF NOT EXISTS order_products (
         id SERIAL PRIMARY KEY,
-        order_id INT REFERENCES "order"(id),
-        product_id INT REFERENCES product(id),
+        order_id INT REFERENCES "order"(id) ON DELETE CASCADE,
+        product_id INT REFERENCES product(id) ON DELETE CASCADE,
         quantity INTEGER,
         product_price DECIMAL(10,2)
       );
@@ -45,14 +46,14 @@ const createTables = async () => {
       CREATE TABLE IF NOT EXISTS cart (
         id SERIAL PRIMARY KEY,
         cart_sum DECIMAL(10,2) DEFAULT 0.00,
-        account_id INT REFERENCES account(id),
+        account_id INT REFERENCES account(id) ON DELETE CASCADE,
         created_at TIMESTAMP DEFAULT now()
       );
 
       CREATE TABLE IF NOT EXISTS cart_items (
         id SERIAL PRIMARY KEY,
         cart_id INT REFERENCES cart(id),
-        product_id INT REFERENCES product(id),
+        product_id INT REFERENCES product(id) ON DELETE CASCADE,
         quantity INTEGER
       );
     `);

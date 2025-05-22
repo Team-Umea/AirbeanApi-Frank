@@ -17,7 +17,7 @@ export const dbAddItemToCart = async (cartId, productId, quantity) => {
     "SELECT product_price FROM product WHERE id = $1",
     [productId]
   );
-  const price = productResult.rows[0].product_price;
+  const price = parseFloat(productResult.rows[0].product_price);
 
   await pool.query(
     `INSERT INTO cart_items (cart_id, product_id, quantity)
@@ -82,4 +82,10 @@ export const dbRemoveItemFromCart = async (cartId, itemId) => {
      WHERE id = $2`,
     [product_price * quantity, cartId]
   );
+};
+
+// Töm kundvagn
+export const dbEmptyCart = async (cartId) => {
+  await pool.query(`DELETE FROM cart_items WHERE cart_id = $1`,[cartId]);
+  await pool.query(`UPDATE cart SET cart_sum = 0 WHERE id = $1`, [cartId]);
 };

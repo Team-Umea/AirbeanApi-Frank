@@ -3,6 +3,7 @@ import {
   dbAddItemToCart,
   dbGetCart,
   dbRemoveItemFromCart,
+  dbEmptyCart
 } from "../models/cart.model.js";
 //logik för routes
 export const createCart = async (req, res) => {
@@ -44,6 +45,17 @@ export const removeItemFromCart = async (req, res) => {
     res.status(200).send("Item removed");
   } catch (error) {
     res.status(500).send("Error removing item");
+  }
+};
+
+
+export const emptyCart = async (req, res) => {
+  const { cartId } = req.params;
+  try {
+    await dbEmptyCart(cartId);
+    res.status(200).send("Cart emptied");
+  } catch (error) {
+    res.status(500).send("Error emptying cart");
   }
 };
 

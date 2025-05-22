@@ -13,6 +13,8 @@ const authJWT = async (req, res, next) => {
         if (!user.rows.length) return res.status(401).send('User not found.');
 
         req.user = user.rows[0];
+
+        console.log(req.user);
         next();
     } catch (err) {
         res.status(400).send('Invalid token.');

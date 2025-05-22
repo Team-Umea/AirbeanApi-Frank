@@ -8,6 +8,7 @@ import {
 //logik för routes
 export const createCart = async (req, res) => {
   const { account_id } = req.body;
+  console.log('yo',account_id);
   try {
     const cartId = await dbCreateCart(account_id);
     res.status(201).json({ cartId });

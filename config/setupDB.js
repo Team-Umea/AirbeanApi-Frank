@@ -40,7 +40,7 @@ const createTables = async () => {
       -- Order table
       CREATE TABLE IF NOT EXISTS "order" (
         id SERIAL PRIMARY KEY,
-        account_id INT REFERENCES account(id) ON DELETE CASCADE NOT NULL,
+        account_id UUID REFERENCES account(account_id) ON DELETE CASCADE NOT NULL,
         order_sum DECIMAL(10,2) NOT NULL CHECK (order_sum >= 0),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -64,7 +64,7 @@ const createTables = async () => {
       CREATE TABLE IF NOT EXISTS cart (
         id SERIAL PRIMARY KEY,
         cart_sum DECIMAL(10,2) DEFAULT 0.00 NOT NULL CHECK (cart_sum >= 0),
-        account_id INT REFERENCES account(id) ON DELETE CASCADE NOT NULL,
+        account_id UUID REFERENCES account(account_id) ON DELETE CASCADE NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         expires_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP + INTERVAL '24 hours') NOT NULL

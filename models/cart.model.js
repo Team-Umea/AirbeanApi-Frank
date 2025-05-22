@@ -38,6 +38,7 @@ export const dbGetCart = async (cartId) => {
   const itemsResult = await pool.query(
     `SELECT cart_items.id AS item_id,
             product.product_name,
+            cart_items.product_id, 
             cart_items.quantity,
             product.product_price
      FROM cart_items
@@ -47,12 +48,13 @@ export const dbGetCart = async (cartId) => {
   );
 
   const cartResult = await pool.query(
-    `SELECT cart_sum FROM cart WHERE id = $1`,
+    `SELECT cart_sum, account_id FROM cart WHERE id = $1`,
     [cartId]
   );
 
   return {
     cart_sum: cartResult.rows[0]?.cart_sum || 0,
+    account_id: cartResult.rows[0]?.account_id || null,
     items: itemsResult.rows,
   };
 };

@@ -1,34 +1,44 @@
 import pool from "../config/db.js";
 
-export const dbCreateOrder = async (cart) => {
+export const dbCreateOrder = async (cart, account_id) => {
   // Start a transaction to ensure data consistency
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
 
     // First get current prices for all products in the cart
-    const productIds = cart.items.map(item => item.product_id);
+    console.log('cart here!!!',cart);
+    const productIds = cart.items.map(item => item.item_id);
+
+    console.log('productIds', productIds);
     const priceResult = await client.query(
       `SELECT id, product_price FROM product WHERE id = ANY($1)`,
       [productIds]
     );
+    console.log('priceResult', priceResult);
     const currentPrices = Object.fromEntries(
       priceResult.rows.map(row => [row.id, row.product_price])
     );
-
+    console.log('currentPrices', currentPrices);
     const result = await client.query(
       `INSERT INTO "order" (account_id, order_sum, status, created_at)
        VALUES ($1, $2, 'pending', CURRENT_TIMESTAMP) 
        RETURNING *`,
-      [cart.account_id, cart.order_sum]
+      [account_id, cart.cart_sum]
     );
+
+    console.log('result!!!', result);
     const order = result.rows[0];
 
+    console.log('order', order);
+    console.log('cart.items:', cart.items);
     // Batch insert order products with current prices for historical record
     const values = cart.items.map((item, i) => 
       `($1, $${i*3 + 2}, $${i*3 + 3}, $${i*3 + 4})`
     ).join(', ');
     
+    console.log('values', values);
+
     const params = [order.id];
     cart.items.forEach(item => {
       params.push(

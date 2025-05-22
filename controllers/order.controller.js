@@ -16,6 +16,8 @@ const ORDER_STATUSES = {
 export const createOrder = async (req, res) => {
   const { cartId } = req.body;
 
+
+
   if (!cartId) {
     return res.status(400).json({ error: "cartId is required" });
   }
@@ -26,11 +28,12 @@ export const createOrder = async (req, res) => {
       return res.status(400).json({ error: "No items in your cart" });
     }
 
-    if (!cart.account_id) {
+    if (!req.user.account_id) {
       return res.status(400).json({ error: "User must be logged in to create an order" });
     }
 
-    const order = await dbCreateOrder(cart);
+    const order = await dbCreateOrder(cart, req.user.account_id);
+    console.log(order);
     await dbEmptyCart(cartId);
 
     // Calculate estimated delivery time (10-25 minutes)

@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(attachPool);
 app.get("/", (req, res) => {
-  res.status(200).send("Hej världern");
+  res.status(200).send("Hej världen!");
 });
 app.use("/order", orderPage);
 app.use("/cart", cartPage);

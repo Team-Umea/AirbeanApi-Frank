@@ -3,17 +3,19 @@ import pool from "./db.js";
 const createTables = async () => {
   try {
     await pool.query(`
+      CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
       CREATE TABLE IF NOT EXISTS account (
         id SERIAL PRIMARY KEY,
         profile_picture TEXT,
         firstname VARCHAR(50),
         surname VARCHAR(50),
         phone_number VARCHAR(20) UNIQUE,
-        adress VARCHAR(100),
+        address VARCHAR(100),
         post_number VARCHAR(50),
         city VARCHAR(50),
         email VARCHAR(100) UNIQUE,
         password_hash VARCHAR(100),
+        acount_id UUID UNIQUE DEFAULT uuid_generate_v4(),
         role TEXT DEFAULT 'user'
       );
 

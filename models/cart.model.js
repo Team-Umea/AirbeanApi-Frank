@@ -83,3 +83,26 @@ export const dbRemoveItemFromCart = async (cartId, itemId) => {
     [product_price * quantity, cartId]
   );
 };
+export const dbClearCart = async (cartId) => {
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    // Ta bort alla varor i kundvagnen
+    await client.query(`DELETE FROM cart_items WHERE cart_id = $1`, [cartId]);
+
+    // Nollställ totalen i kundvagnen
+    await client.query(`UPDATE cart SET cart_sum = 0.00 WHERE id = $1`, [
+      cartId,
+    ]);
+
+    await client.query("COMMIT");
+  } catch (error) {
+    await client.query("ROLLBACK");
+    console.error("Fel vid rensning av kundvagn:", error);
+    throw error;
+  } finally {
+    client.release();
+  }
+};

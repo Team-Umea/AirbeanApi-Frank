@@ -31,7 +31,9 @@ const createTables = async () => {
         id SERIAL PRIMARY KEY,
         account_id INT REFERENCES account(id),
         order_sum DECIMAL(10,2),
-        created_at TIMESTAMP DEFAULT now()
+        created_at TIMESTAMP DEFAULT now(),
+        delivery_time INTERVAL DEFAULT INTERVAL '20 minutes',
+        status TEXT DEFAULT 'pending'
       );
 
       CREATE TABLE IF NOT EXISTS order_products (

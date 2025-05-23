@@ -54,3 +54,11 @@ export const dbOrderHistory = async (userId) => {
   );
   return result.rows;
 };
+export const dbUpdateOrderStatus = async (orderId, newStatus) => {
+  const result = await pool.query(
+    `UPDATE "order" SET status = $1 WHERE id = $2 RETURNING *`,
+    [newStatus, orderId]
+  );
+
+  return result.rowCount > 0 ? result.rows[0] : null;
+};

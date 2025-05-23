@@ -2,6 +2,7 @@ import {
   dbCreateOrder,
   dbGetOrderStatus,
   dbOrderHistory,
+  dbUpdateOrderStatus,
 } from "../models/order.model.js";
 
 import { dbGetCart, dbClearCart } from "../models/cart.model.js";
@@ -70,5 +71,33 @@ export const getOrderHistory = async (req, res) => {
   } catch (error) {
     console.error("Error fetching order history:", error);
     res.status(500).send("Server error while fetching order history");
+  }
+};
+export const updateOrderStatus = async (req, res) => {
+  const { orderId } = req.params;
+  const { status } = req.body;
+
+  const validStatuses = [
+    "pending",
+    "preparing",
+    "out_for_delivery",
+    "delivered",
+  ];
+  if (!validStatuses.includes(status)) {
+    return res.status(400).json({ error: "Invalid status" });
+  }
+
+  try {
+    const updatedOrder = await dbUpdateOrderStatus(orderId, status);
+    if (!updatedOrder) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Order status updated", order: updatedOrder });
+  } catch (error) {
+    console.error("Error updating order status:", error);
+    res.status(500).json({ error: "Server error while updating status" });
   }
 };
